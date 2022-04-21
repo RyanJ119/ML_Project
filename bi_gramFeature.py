@@ -40,6 +40,19 @@ def initialize_feature_dataframes(data_dict):
 
 
 def countpairs(string, twoLetters):
+    """This function will count the number of occurrences of an input two letters in the input string
+    
+    Parameters
+    ----------
+    string : string
+        input string
+    twoLetters: a string consistning of two letters
+    
+    Returns
+    -------
+    counter : int
+        integer number of times the two letters appear in the string
+    """
     counter = 0
     string = list(string)
 
@@ -51,7 +64,19 @@ def countpairs(string, twoLetters):
 
 
 def bi_gram(data_list):
+    """This function will count the number of occurrences of an input two letters in the input string
     
+    Parameters
+    ----------
+    string : string
+        input string
+    twoLetters: a string consistning of two letters
+    
+    Returns
+    -------
+    counter : int
+        integer number of times the two letters appear in the string
+    """
    # print(data_dict.head())
     pairsOfLetters = create_pairs()
     
@@ -65,7 +90,13 @@ def bi_gram(data_list):
 
 
 def create_pairs():
-    
+    """This function will simply create all combinations of two letters in a given alphabet
+
+    Returns
+    -------
+    combinations : list
+       returns a list of all sets of two letters in a given alphabet
+    """
     amino_acid_alphabet = 'ACDEFGHIKLMNPQRSTVWY' #had  o and u 
     combinations = []
     for i in amino_acid_alphabet:      
