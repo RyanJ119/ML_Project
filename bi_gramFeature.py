@@ -10,33 +10,10 @@ Created on Thu Apr 21 09:45:14 2022
 import numpy as np
 import pandas as pd
 import file_io
+from feature_extraction import initialize_feature_dataframes, convert_feature_list_to_df
 
 
 
-def initialize_feature_dataframes(data_dict):
-    """This function will create a dictionary that holds the dataframe for features
-        data_dict and feature_dict will be parallel
-    
-    Parameters
-    ----------
-    data_dict : dictionary
-        dictionary where key is file name/data source and value is pd dataframe
-        of sequence data
-    
-    Returns
-    -------
-    feature_dict : dicitonary
-        dictionary of pd dataframes that hold features
-    """
-    feature_dict = {}
-    # iterate over each key in raw dictionary
-    for key in data_dict:
-        feature_key = key + '_features'
-
-        # the second col holds fold information - these are the labels
-        feature_dict[feature_key] = data_dict[key].iloc[:, 1]
-
-    return feature_dict
 
 
 def countpairs(string, twoLetters):
@@ -105,22 +82,6 @@ def create_pairs():
     return    combinations 
         
      
-def convert_feature_list_to_df(feature_list):
-    """converts list of lists into a dataframe
-    
-    Parameters
-    ----------
-    feature_list : list
-        list of lists. First index corresponds to which AA sequence we are at
-        second index corresponds to a specific feature
-    
-    Returns
-    -------
-    pandas dataframe
-        convert to pandas dataframe for easier use in the future
-    """
-    return pd.DataFrame(feature_list, columns=None)
-
 
         
 
