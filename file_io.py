@@ -67,7 +67,7 @@ def write_feature_info(feature_dict):
 
     for key in feature_dict:
         save_loc = directory_of_files + key + '.csv'
-        feature_dict[key].to_csv(save_loc, index=False, header=None)
+        feature_dict[key].to_csv(save_loc, index=False)
 
 
 if __name__ == "__main__":

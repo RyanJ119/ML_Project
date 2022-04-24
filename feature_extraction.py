@@ -86,6 +86,87 @@ def convert_feature_list_to_df(feature_list):
     return pd.DataFrame(feature_list, columns=None)
 
 
+def countpairs(string, twoLetters):
+    """This function will count the number of occurrences of an input two letters in the input string
+    
+    Parameters
+    ----------
+    string : string
+        input string
+    twoLetters: a string consistning of two letters
+    
+    Returns
+    -------
+    counter : int
+        integer number of times the two letters appear in the string
+    """
+    # counter = 0
+    # string = list(string)
+
+    # for i in range(len(string)-1):
+    #     g = ''.join(string[i:i+2])
+    #     if g == twoLetters:
+    #         counter+=1
+    counter = string.count(twoLetters)
+    return counter
+
+
+def bi_gram(seq_data_list):
+    """This function will count the number of occurrences of an input two letters in the input string
+    
+    Parameters
+    ----------
+    string : string
+        input string
+    twoLetters: a string consistning of two letters
+    
+    Returns
+    -------
+    mat : 2d matrix
+        matrix where first index is which protein sequence and second is feature
+        where the features are bigram occurrances
+    """
+    # print(data_dict.head())
+    pairsOfLetters = create_pairs()
+    
+    rows = len(seq_data_list)
+    cols = len(pairsOfLetters)
+    mat = [[0 for _ in range(cols)] for _ in range(rows)]
+    for i in range(len(seq_data_list)):
+        for j in range(len(pairsOfLetters)):
+            mat[i][j] = countpairs(seq_data_list[i], pairsOfLetters[j])
+    return mat
+
+
+def create_pairs():
+    """This function will simply create all combinations of two letters in a given alphabet
+
+    Returns
+    -------
+    combinations : list
+       returns a list of all sets of two letters in a given alphabet
+    """
+    amino_acid_alphabet = 'ACDEFGHIKLMNPQRSTVWY'  # had  o and u 
+    combinations = []
+    for i in amino_acid_alphabet:      
+        for j in amino_acid_alphabet:    
+            combinations.append(i+j)
+    return combinations 
+
+
+def special_trigram_occurance(seq_data_list):
+    special_trigrams = [
+        "MPT", "SRL", "GVWT", "AEF", "TGF", "HHV", "KNF", "LAK", "AGL", "SYN", "DAL"]
+
+    rows = len(seq_data_list)
+    cols = len(special_trigrams)
+    special_trigram_mat = [[0 for _ in range(cols)] for _ in range(rows)]
+    for i in range(rows):
+        for j in range(cols):
+            special_trigram_mat[i][j] = seq_data_list[i].count(special_trigrams[j])
+    return special_trigram_mat
+
+
 if __name__ == "__main__":
     # testing the above code
     file_name_list = ['g_data.csv', 'n_data.csv']
@@ -99,18 +180,53 @@ if __name__ == "__main__":
     g_seq_data = cleaned_data['g_data'].iloc[:, 3].tolist()
     n_seq_data = cleaned_data['n_data'].iloc[:, 3].tolist()
 
-    # print(g_seq_data)
-    test1, test2 = calc_occur_comp(g_seq_data)
-    # print(sum(test1[0]))
-    # print(test1[0])
-    # print(sum(test2[0]))
-    # print(test2[0])
+    # ###### gram positive feature extraction section ############
+    g_bigram = bi_gram(g_seq_data)
+    g_special_trigrams = special_trigram_occurance(g_seq_data)
+    g_occur, g_comp = calc_occur_comp(g_seq_data)
 
-    # this section shows how to combine the different list of lists
-    thing1 = convert_feature_list_to_df(test1)
-    thing2 = convert_feature_list_to_df(test2)
-    combine = pd.concat([thing1, thing2], axis=1)
-    combine.columns = [i for i in range(0, 44)]
-    print(combine)
+    g_bigram_df = convert_feature_list_to_df(g_bigram)
+    g_special_trigrams = convert_feature_list_to_df(g_special_trigrams)
+    g_occur_df = convert_feature_list_to_df(g_occur)
+    g_comp_df = convert_feature_list_to_df(g_comp)
 
-    # file_io.write_feature_info(feature_dict)
+    g_existing_features = feature_dict['g_data_features']
+    g_updated_features = pd.concat(
+        [g_existing_features, g_occur_df, g_comp_df, g_bigram_df, g_special_trigrams], axis=1)
+
+    # print(g_updated_features)
+    #######################################################
+    
+    # #### gram negative feature extraction ###################
+    n_bigram = bi_gram(n_seq_data)
+    n_special_trigrams = special_trigram_occurance(n_seq_data)
+    n_occur, n_comp = calc_occur_comp(n_seq_data)
+
+    n_bigram_df = convert_feature_list_to_df(n_bigram)
+    n_special_trigrams = convert_feature_list_to_df(n_special_trigrams)
+    n_occur_df = convert_feature_list_to_df(n_occur)
+    n_comp_df = convert_feature_list_to_df(n_comp)
+
+    n_existing_features = feature_dict['n_data_features']
+    n_updated_features = pd.concat(
+        [n_existing_features, n_occur_df, n_comp_df, n_bigram_df, n_special_trigrams], axis=1)
+
+    # print(n_updated_features)
+    ###################################################
+    
+    # add headers to the file to correspond to provided files
+    num_features = g_updated_features.shape[1]  # shape returns tuple, we want # cols
+    header_list = ['Fold']
+    # we start at 1 because first entry is the fold!
+    for i in range(1, num_features):
+        header_list.append('V'+str(i))
+
+    # add headers to the dataframes:
+    g_updated_features.columns = header_list
+    n_updated_features.columns = header_list
+    # update the dictionary of features:
+    feature_dict['g_data_features'] = g_updated_features
+    feature_dict['n_data_features'] = n_updated_features
+
+    # write the features to files
+    file_io.write_feature_info(feature_dict)
