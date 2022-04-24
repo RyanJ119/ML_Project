@@ -33,6 +33,19 @@ def read_seq_files(file_name_list):
     return seq_dict
 
 
+def read_feature_files(file_name_list):
+    directory_of_files = 'data/'
+    feature_dict = {}
+
+    for file_name in file_name_list:
+        data = pd.read_csv(directory_of_files + file_name)
+        file_no_extension = file_name.split('.')[0]
+
+        feature_dict[file_no_extension] = data
+
+    return feature_dict
+    
+
 def clean_input(seq_dict):
     """Some of the excel files have extra cols at the end, we will remove them
     

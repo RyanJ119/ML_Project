@@ -169,64 +169,77 @@ def special_trigram_occurance(seq_data_list):
 
 if __name__ == "__main__":
     # testing the above code
-    file_name_list = ['g_data.csv', 'n_data.csv']
-    test_dict = file_io.read_seq_files(file_name_list)
 
-    cleaned_data = file_io.clean_input(test_dict)
+    generate_features = False
 
-    feature_dict = initialize_feature_dataframes(cleaned_data)
+    if generate_features:  # if we still have to generate the features
+        file_name_list = ['g_data.csv', 'n_data.csv']
+        test_dict = file_io.read_seq_files(file_name_list)
 
-    # sequence data is held in the final col of the dataframe
-    g_seq_data = cleaned_data['g_data'].iloc[:, 3].tolist()
-    n_seq_data = cleaned_data['n_data'].iloc[:, 3].tolist()
+        cleaned_data = file_io.clean_input(test_dict)
 
-    # ###### gram positive feature extraction section ############
-    g_bigram = bi_gram(g_seq_data)
-    g_special_trigrams = special_trigram_occurance(g_seq_data)
-    g_occur, g_comp = calc_occur_comp(g_seq_data)
+        feature_dict = initialize_feature_dataframes(cleaned_data)
 
-    g_bigram_df = convert_feature_list_to_df(g_bigram)
-    g_special_trigrams = convert_feature_list_to_df(g_special_trigrams)
-    g_occur_df = convert_feature_list_to_df(g_occur)
-    g_comp_df = convert_feature_list_to_df(g_comp)
+        # sequence data is held in the final col of the dataframe
+        g_seq_data = cleaned_data['g_data'].iloc[:, 3].tolist()
+        n_seq_data = cleaned_data['n_data'].iloc[:, 3].tolist()
 
-    g_existing_features = feature_dict['g_data_features']
-    g_updated_features = pd.concat(
-        [g_existing_features, g_occur_df, g_comp_df, g_bigram_df, g_special_trigrams], axis=1)
+        # ###### gram positive feature extraction section ############
+        g_bigram = bi_gram(g_seq_data)
+        g_special_trigrams = special_trigram_occurance(g_seq_data)
+        g_occur, g_comp = calc_occur_comp(g_seq_data)
 
-    # print(g_updated_features)
-    #######################################################
-    
-    # #### gram negative feature extraction ###################
-    n_bigram = bi_gram(n_seq_data)
-    n_special_trigrams = special_trigram_occurance(n_seq_data)
-    n_occur, n_comp = calc_occur_comp(n_seq_data)
+        g_bigram_df = convert_feature_list_to_df(g_bigram)
+        g_special_trigrams = convert_feature_list_to_df(g_special_trigrams)
+        g_occur_df = convert_feature_list_to_df(g_occur)
+        g_comp_df = convert_feature_list_to_df(g_comp)
 
-    n_bigram_df = convert_feature_list_to_df(n_bigram)
-    n_special_trigrams = convert_feature_list_to_df(n_special_trigrams)
-    n_occur_df = convert_feature_list_to_df(n_occur)
-    n_comp_df = convert_feature_list_to_df(n_comp)
+        g_existing_features = feature_dict['g_data_features']
+        g_updated_features = pd.concat(
+            [g_existing_features, g_occur_df, g_comp_df, g_bigram_df, g_special_trigrams], axis=1)
 
-    n_existing_features = feature_dict['n_data_features']
-    n_updated_features = pd.concat(
-        [n_existing_features, n_occur_df, n_comp_df, n_bigram_df, n_special_trigrams], axis=1)
+        # print(g_updated_features)
+        #######################################################
+        
+        # #### gram negative feature extraction ###################
+        n_bigram = bi_gram(n_seq_data)
+        n_special_trigrams = special_trigram_occurance(n_seq_data)
+        n_occur, n_comp = calc_occur_comp(n_seq_data)
 
-    # print(n_updated_features)
-    ###################################################
-    
-    # add headers to the file to correspond to provided files
-    num_features = g_updated_features.shape[1]  # shape returns tuple, we want # cols
-    header_list = ['Fold']
-    # we start at 1 because first entry is the fold!
-    for i in range(1, num_features):
-        header_list.append('V'+str(i))
+        n_bigram_df = convert_feature_list_to_df(n_bigram)
+        n_special_trigrams = convert_feature_list_to_df(n_special_trigrams)
+        n_occur_df = convert_feature_list_to_df(n_occur)
+        n_comp_df = convert_feature_list_to_df(n_comp)
 
-    # add headers to the dataframes:
-    g_updated_features.columns = header_list
-    n_updated_features.columns = header_list
-    # update the dictionary of features:
-    feature_dict['g_data_features'] = g_updated_features
-    feature_dict['n_data_features'] = n_updated_features
+        n_existing_features = feature_dict['n_data_features']
+        n_updated_features = pd.concat(
+            [n_existing_features, n_occur_df, n_comp_df, n_bigram_df, n_special_trigrams], axis=1)
 
-    # write the features to files
-    file_io.write_feature_info(feature_dict)
+        # print(n_updated_features)
+        ###################################################
+        
+        # add headers to the file to correspond to provided files
+        num_features = g_updated_features.shape[1]  # shape returns tuple, we want # cols
+        header_list = ['Fold']
+        # we start at 1 because first entry is the fold!
+        for i in range(1, num_features):
+            header_list.append('V'+str(i))
+
+        # add headers to the dataframes:
+        g_updated_features.columns = header_list
+        n_updated_features.columns = header_list
+        # update the dictionary of features:
+        feature_dict['g_data_features'] = g_updated_features
+        feature_dict['n_data_features'] = n_updated_features
+
+        # write the features to files
+        file_io.write_feature_info(feature_dict)
+
+    # Example of how to load data from the files
+    elif not generate_features:  # if we've already generated the features
+        file_name_list = ['g_data_features.csv', 'n_data_features.csv']
+        feature_dict = file_io.read_feature_files(file_name_list)
+
+        print(feature_dict.keys())
+        print(feature_dict['g_data_features'])
+        print(feature_dict['n_data_features'])
