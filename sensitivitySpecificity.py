@@ -1,3 +1,4 @@
+
 def sensitivitySpecificity(mat, fold):
     """
     Input: a confusion matrix and a fold(scalar)
@@ -22,7 +23,9 @@ def sensitivitySpecificity(mat, fold):
     specificity =    trueNegative / (trueNegative + falsePositive)   
                 
     return [sensitivity, specificity]
-             
+
+
+                
 def printSpecifictySensitivity(mat):
     """
     Input: a confusion matrix 
@@ -32,10 +35,14 @@ def printSpecifictySensitivity(mat):
     vals = []
     for i in range(len(mat)):
         vals.append( sensitivitySpecificity(mat, i)) 
+#        print("the sensitivity of fold {} is {}".format(i+1, vals[0]))
+#        print("the specificity of fold {} is {}".format(i+1, vals[1]))
+#    for i in vals:
+#        print(i)
     print("sensitivity for folds in order:")
     for i in vals:
         print("{:.2f}".format(i[0]), end = ' , ')
     print()
     print("specificity for folds in order:")
     for i in vals:
-        print("{:.2f}".format(i[0]),  end = ' , ')
+        print("{:.2f}".format(i[1]),  end = ' , ')
