@@ -34,6 +34,11 @@ def sensitivitySpecificity(mat, fold):
 
                 
 def printSpecifictySensitivity(mat):
+    """
+    Input: a confusion matrix 
+    
+    Output: Prints sensitivity and specificity in order of the columns of the confusion matrix
+    """
     vals = []
     for i in range(len(mat)):
         vals.append( sensitivitySpecificity(mat, i)) 
