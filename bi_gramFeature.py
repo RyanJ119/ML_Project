@@ -1,12 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Apr 21 09:45:14 2022
-
-@author: ryanweightman
-"""
-
-#Import dataframe 
 import numpy as np
 import pandas as pd
 import file_io
