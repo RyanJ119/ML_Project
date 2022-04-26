@@ -1,11 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Sun Apr 24 16:35:02 2022
-
-@author: ryanweightman
-"""
-
 from sklearn import model_selection
 from sklearn.ensemble import BaggingClassifier
 from sklearn.tree import DecisionTreeClassifier
