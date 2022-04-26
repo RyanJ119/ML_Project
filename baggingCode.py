@@ -20,16 +20,6 @@ Created on Sat Apr  9 16:53:54 2022
 
 import pandas as pd
 
-from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import matthews_corrcoef
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import classification_report, confusion_matrix
-
-
-#print(dataset.head())
-
-
-
 dataset = pd.read_csv("comp.csv")
 X = dataset.iloc[:,1:]
 Y = dataset.iloc[:, 0]
