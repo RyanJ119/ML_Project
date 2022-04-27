@@ -10,7 +10,7 @@ from sklearn.metrics import classification_report, confusion_matrix
 This module implements the Random Foest Learner on a set of features read in from a csv. 
 """
 #Read in CSV
-dataset = pd.read_csv("comp.csv")
+dataset = pd.read_csv("data/g_data_features.csv")
 #Separate labels from data
 X = dataset.iloc[:,1:]
 y = dataset.iloc[:, 0]
