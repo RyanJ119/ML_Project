@@ -92,8 +92,9 @@ def countpairs(string, twoLetters):
     Parameters
     ----------
     string : string
-        input string
-    twoLetters: a string consistning of two letters
+        a string formed of letters from the AA alphabet
+    twoLetters: string
+        a (bigram) string formed from AA alphabet letters
     
     Returns
     -------
@@ -116,9 +117,9 @@ def bi_gram(seq_data_list):
     
     Parameters
     ----------
-    string : string
-        input string
-    twoLetters: a string consistning of two letters
+    seq_data_list : list
+        list of AA sequences that we want to generate bi_gram features
+        for
     
     Returns
     -------
@@ -126,7 +127,6 @@ def bi_gram(seq_data_list):
         matrix where first index is which protein sequence and second is feature
         where the features are bigram occurrances
     """
-    # print(data_dict.head())
     pairsOfLetters = create_pairs()
     
     rows = len(seq_data_list)
@@ -154,17 +154,32 @@ def create_pairs():
     return combinations 
 
 
-def special_trigram_occurance(seq_data_list):
-    special_trigrams = [
+def special_ngrams_occurance(seq_data_list):
+    """This function will generate a matrix of features (for the sequences
+    in seq_data_list) based on a list of special of ngrams
+    
+    Parameters
+    ----------
+    seq_data_list : list
+        list of amino acid sequences that we want to gneerate matrices for
+    
+    Returns
+    -------
+    matrix
+        matrix where rows correspond to different AA sequences
+        each column corresponds to an occurrance for a string in
+        special_ngrams
+    """
+    special_ngrams = [
         "MPT", "SRL", "GVWT", "AEF", "TGF", "HHV", "KNF", "LAK", "AGL", "SYN", "DAL"]
 
     rows = len(seq_data_list)
-    cols = len(special_trigrams)
-    special_trigram_mat = [[0 for _ in range(cols)] for _ in range(rows)]
+    cols = len(special_ngrams)
+    special_ngram_mat = [[0 for _ in range(cols)] for _ in range(rows)]
     for i in range(rows):
         for j in range(cols):
-            special_trigram_mat[i][j] = seq_data_list[i].count(special_trigrams[j])
-    return special_trigram_mat
+            special_ngram_mat[i][j] = seq_data_list[i].count(special_ngrams[j])
+    return special_ngram_mat
 
 
 if __name__ == "__main__":

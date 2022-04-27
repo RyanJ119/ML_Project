@@ -17,7 +17,7 @@ def read_seq_files(file_name_list):
         data of bacteria sequences
     """
 
-    directory_of_files = 'data/'
+    directory_of_files = '../data/'
 
     seq_dict = {}
     for file_name in file_name_list:
@@ -34,7 +34,23 @@ def read_seq_files(file_name_list):
 
 
 def read_feature_files(file_name_list):
-    directory_of_files = 'data/'
+    """This function will read in each file provided in file_name_list
+    and create a dictionary that holds the data stored in those files
+    keys for the dictionary will be the filename (no extension)
+    values will be pandas dataframes
+    
+    Parameters
+    ----------
+    file_name_list : list of strings
+        holds the files to read in from the data subfolder
+    
+    Returns
+    -------
+    dictionary
+        dictionary has keys of file names with values of pandas
+        dataframes that store the data
+    """
+    directory_of_files = '../data/'
     feature_dict = {}
 
     for file_name in file_name_list:
@@ -76,7 +92,7 @@ def write_feature_info(feature_dict):
         keys are names of files that the features came from, values are the
         features of the data
     """
-    directory_of_files = 'data/'
+    directory_of_files = '../data/'
 
     for key in feature_dict:
         save_loc = directory_of_files + key + '.csv'
