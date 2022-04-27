@@ -17,6 +17,7 @@ import sensitivitySpecificity
 # ###IMPORTING CSV####
 gdata = pd.read_csv("data/g_data_features.csv")
 num_classes = 4
+
 # ###FORMATING DATA TO BE PASSED INTO THE MODEL####
 X = gdata.iloc[:, 1:]  # features
 y = gdata.iloc[:, 0]  # labels
